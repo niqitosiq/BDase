@@ -2,4 +2,7 @@ module github.com/niqitosiq/BDase
 
 go 1.14
 
-require github.com/BurntSushi/toml v0.3.1 // indirect
+require (
+	github.com/BurntSushi/toml v0.3.1
+	github.com/sirupsen/logrus v1.6.0
+)
