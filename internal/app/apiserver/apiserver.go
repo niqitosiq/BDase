@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"github.com/niqitosiq/BDase/internal/app/chain"
 	"github.com/sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -50,11 +51,26 @@ func (s *APIServer) configureLogger() error {
 }
 
 func (s *APIServer) configureRouter() {
-	s.router.HandleFunc("/hello", s.handleHello())
+	s.router.HandleFunc("/create", s.handleCreate())
+	s.router.HandleFunc("/newBlock", s.handleNewBlock())
 }
 
-func (s *APIServer) handleHello() http.HandlerFunc {
+func (s *APIServer) handleCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "hello")
+		newChain := chain.NewChain("chain")
+		io.WriteString(w, newChain.Name)
+	}
+}
+
+func (s *APIServer) handleNewBlock() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		currentChain := chain.AppendBlock("chain", "Новый контент")
+
+		var contents string = ""
+		for _, block := range currentChain.Blocks {
+			contents = contents + block.Content
+		}
+
+		io.WriteString(w, contents)
 	}
 }
